@@ -20,6 +20,23 @@ def train_logistic_regression(X, t):
     Return weight and bias
     """
 
+    return w, b
+
+
+def predict_logistic_regression(X, w, b):
+    """
+    Generate predictions by your logistic classifier.
+    """
+
+    return t
+
+
+def train_linear_regression(X, t):
+    """
+    Given data, train your linear regression classifier.
+    Return weight and bias
+    """
+
     x_mean = X.mean(axis=0)
     t_mean = t.mean(axis=0)
 
@@ -33,29 +50,12 @@ def train_logistic_regression(X, t):
     return w, b
 
 
-def predict_logistic_regression(X, w, b):
+def predict_linear_regression(X, w, b):
     """
     Generate predictions by your logistic classifier.
     """
 
     t = (X @ w) + b
-
-    return t
-
-
-def train_linear_regression(X, t):
-    """
-    Given data, train your linear regression classifier.
-    Return weight and bias
-    """
-
-    return w, b
-
-
-def predict_linear_regression(X, w, b):
-    """
-    Generate predictions by your logistic classifier.
-    """
 
     return t
 
