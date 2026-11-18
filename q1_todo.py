@@ -20,6 +20,23 @@ def train_logistic_regression(X, t):
     Return weight and bias
     """
 
+    w = np.zeros(X.shape[1])
+    b = 0.0
+
+    learning_rate = 0.1
+    epochs = 1000
+
+    for i in range(epochs):
+        z = X @ w + b
+        y = 1 / (1 + np.exp(-z))
+        error = y - t
+
+        grad_w = X.T @ error / len(t)
+        grad_b = error.mean()
+
+        w -= learning_rate * grad_w
+        b -= learning_rate * grad_b
+
     return w, b
 
 
@@ -27,6 +44,12 @@ def predict_logistic_regression(X, w, b):
     """
     Generate predictions by your logistic classifier.
     """
+
+    z = X @ w + b
+
+    y = 1 / (1 + np.exp(-z))
+
+    t = (y >= 0.5).astype(int)
 
     return t
 
@@ -55,7 +78,9 @@ def predict_linear_regression(X, w, b):
     Generate predictions by your logistic classifier.
     """
 
-    t = (X @ w) + b
+    y = (X @ w) + b
+
+    t = (y >= 0.5).astype(int)
 
     return t
 
@@ -64,6 +89,21 @@ def get_accuracy(t, t_hat):
     """
     Calculate accuracy,
     """
+
+    tp = list(t).count(1)
+    tn = list(t).count(0)
+
+    fp = 0
+    fn = 0
+
+    for i in range(len(t)):
+        if t_hat[i] and not t[i]:
+            fp += 1
+        elif not t_hat[i] and t[i]:
+            fn += 1
+
+    acc = (tp + tn) / (tp + tn + fp + fn)
+
     return acc
 
 
