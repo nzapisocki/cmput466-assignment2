@@ -9,7 +9,7 @@ def readMNISTdata():
         magic, size = struct.unpack(">II", f.read(8))
         nrows, ncols = struct.unpack(">II", f.read(8))
         test_data = np.fromfile(f, dtype=np.dtype(np.uint8).newbyteorder('>'))
-        test_data = test_data.reshape((size, nrows*ncols))
+        test_data = test_data.reshape((size, nrows * ncols))
 
     with open('t10k-labels-idx1-ubyte', 'rb') as f:
         magic, size = struct.unpack(">II", f.read(8))
@@ -21,7 +21,7 @@ def readMNISTdata():
         magic, size = struct.unpack(">II", f.read(8))
         nrows, ncols = struct.unpack(">II", f.read(8))
         train_data = np.fromfile(f, dtype=np.dtype(np.uint8).newbyteorder('>'))
-        train_data = train_data.reshape((size, nrows*ncols))
+        train_data = train_data.reshape((size, nrows * ncols))
 
     with open('train-labels-idx1-ubyte', 'rb') as f:
         magic, size = struct.unpack(">II", f.read(8))
@@ -33,7 +33,7 @@ def readMNISTdata():
     train_data = np.concatenate(
         (np.ones([train_data.shape[0], 1]), train_data), axis=1)
     test_data = np.concatenate(
-        (np.ones([test_data.shape[0], 1]),  test_data), axis=1)
+        (np.ones([test_data.shape[0], 1]), test_data), axis=1)
     _random_indices = np.arange(len(train_data))
     np.random.shuffle(_random_indices)
     train_labels = train_labels[_random_indices]
@@ -54,6 +54,21 @@ def predict(X, W, t=None):
 
     # TODO Your code here
 
+    # ------ prediction ------ #
+    z = X @ W
+    z_mean = z.mean(axis=0)
+    z -= z_mean
+
+    z_sum = sum(z)
+
+    y = []
+
+    for i in range(len(z)):
+        answer = np.exp(z[i]) / z_sum
+        y.append(answer)
+
+    #
+
     return y, t_hat, loss, acc
 
 
@@ -63,27 +78,24 @@ def train(X_train, y_train, X_val, t_val):
 
     # TODO Your code here
 
-    return epoch_best, acc_best,  W_best, train_losses, valid_accs
+    return epoch_best, acc_best, W_best, train_losses, valid_accs
 
 
 ##############################
 # Main code starts here
 X_train, t_train, X_val, t_val, X_test, t_test = readMNISTdata()
 
-
 print(X_train.shape, t_train.shape, X_val.shape,
       t_val.shape, X_test.shape, t_test.shape)
 
-
 N_class = 10
 
-alpha = 0.1      # learning rate
-batch_size = 100    # batch size
-MaxEpoch = 50        # Maximum epoch
-decay = 0.          # weight decay
-
+alpha = 0.1  # learning rate
+batch_size = 100  # batch size
+MaxEpoch = 50  # Maximum epoch
+decay = 0.  # weight decay
 
 # TODO: report 3 number, plot 2 curves
-epoch_best, acc_best,  W_best, train_losses, valid_accs = train(X_train, t_train, X_val, t_val)
+epoch_best, acc_best, W_best, train_losses, valid_accs = train(X_train, t_train, X_val, t_val)
 
 _, _, _, acc_test = predict(X_test, W_best, t_test)
