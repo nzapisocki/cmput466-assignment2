@@ -69,7 +69,16 @@ def predict(X, W, t=None):
     t_hat = np.argmax(y, axis=1)
 
     # --- loss --- #
+    loss = 0
 
+    for m in range(len(y)):
+        true_class = t[m, 0]
+        loss -= np.log(y[m][true_class])
+
+    # -- accuracy -- #
+
+    acc = np.mean(t_hat == t[:, 0])
+    
     return y, t_hat, loss, acc
 
 
