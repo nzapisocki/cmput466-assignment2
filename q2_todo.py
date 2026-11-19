@@ -56,18 +56,19 @@ def predict(X, W, t=None):
 
     # ------ prediction ------ #
     z = X @ W
-    z_mean = z.mean(axis=0)
-    z -= z_mean
-
-    z_sum = sum(z)
 
     y = []
 
     for i in range(len(z)):
-        answer = np.exp(z[i]) / z_sum
+        exp_scores = np.exp(z[i] - np.max(z[i]))
+        answer = exp_scores / exp_scores.sum()
         y.append(answer)
 
-    #
+    # --- t_hat --- #
+
+    t_hat = np.argmax(y, axis=1)
+
+    # --- loss --- #
 
     return y, t_hat, loss, acc
 
